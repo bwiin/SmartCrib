@@ -1,5 +1,6 @@
 package com.example.wiinb.smartcrib;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -10,10 +11,30 @@ import java.net.URL;
 import java.util.*;
 import android.os.AsyncTask;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 import android.widget.TextView;
 import java.lang.String;
+
+
+
+
+
 public class MainActivity extends AppCompatActivity {
 
+
+    public interface GlobalStats{
+
+        int TEMP = 60;
+        int CAM = 0; //Flag to control if camera is on or off
+        int UP = 0; //Waking-up mode; 0 or 1
+        int HR = 0; //Heart rate
+        int TXT = 0; //
+        int LGT = 0; //Controls the lights
+        int TOY = 0; //Controls the toy
+        int CALL =0; //Call mode; 0 = off, 1 = on/parent1 2 = both parent
+
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -23,8 +44,14 @@ public class MainActivity extends AppCompatActivity {
         runAsyncTask();
     }
 
+    public void onGetNameClick(View view){
+        Intent getNameScreenIntent = new Intent(this, TemperatureScreen.class);
+        startActivity(getNameScreenIntent);
+    }
+
+
     private void runAsyncTask() {
-        new fileOps().execute("http://ucfgroup7smartcrib.ddns.net/myFile.txt");
+        //new fileOps().execute("http://ucfgroup7smartcrib.ddns.net/myFile.txt");
     }
 
     private class fileOps extends AsyncTask<String, Void, ArrayList<String>> {
@@ -65,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 myString += data + "\n";
             }
             TextView txt = (TextView) findViewById(R.id.txtView);
-            txt.setText(myString);
+            //txt.setText(myString);
 
         }
     }
