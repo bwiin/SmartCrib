@@ -1,19 +1,20 @@
 package com.example.wiinb.smartcrib;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.*;
-import java.net.URL;
-import java.util.*;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
-import java.lang.String;
+
+import com.amazonaws.mobile.client.AWSMobileClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
 
 
 
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AWSMobileClient.getInstance().initialize(this).execute();
+
         TextView txt = (TextView) findViewById(R.id.txtView);
         txt.setMovementMethod(new ScrollingMovementMethod());
 
