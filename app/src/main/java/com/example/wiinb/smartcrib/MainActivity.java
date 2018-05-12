@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.widget.TextView;
-
-import com.amazonaws.mobile.client.AWSMobileClient;
+import android.widget.Button;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,43 +13,44 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-
-
-
-
 public class MainActivity extends AppCompatActivity {
 
-
-    public interface GlobalStats{
-
-        int TEMP = 60;
-        int CAM = 0; //Flag to control if camera is on or off
-        int UP = 0; //Waking-up mode; 0 or 1
-        int HR = 0; //Heart rate
-        int TXT = 0; //
-        int LGT = 0; //Controls the lights
-        int TOY = 0; //Controls the toy
-        int CALL =0; //Call mode; 0 = off, 1 = on/parent1 2 = both parent
-
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AWSMobileClient.getInstance().initialize(this).execute();
+        Button butt1 = (Button)findViewById(R.id.temp_butt);
+        Button butt2 = (Button)findViewById(R.id.heartrate_butt);
+        Button butt3 = (Button)findViewById(R.id.weight_butt);
 
-        TextView txt = (TextView) findViewById(R.id.txtView);
-        txt.setMovementMethod(new ScrollingMovementMethod());
+        butt1.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent int1 = new Intent(MainActivity.this, Temperature.class);
+                startActivity(int1);
+            }
+        });
+        butt2.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent int2 = new Intent(MainActivity.this, HeartRate.class);
+                startActivity(int2);
+            }
+        });
 
-        runAsyncTask();
-    }
+        butt3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent int3 = new Intent(MainActivity.this, Weight.class);
+                startActivity(int3);
+            }
+        });
 
-    public void onGetNameClick(View view){
-        Intent getNameScreenIntent = new Intent(this, TemperatureScreen.class);
-        startActivity(getNameScreenIntent);
-    }
+        //AWSMobileClient.getInstance().initialize(this).execute();
 
+        //runAsyncTask();
+}
 
     private void runAsyncTask() {
         //new fileOps().execute("http://ucfgroup7smartcrib.ddns.net/myFile.txt");
@@ -83,11 +81,7 @@ public class MainActivity extends AppCompatActivity {
         {
                 //System.out.println(strings[0]);
         }
-        protected void onPreExecute()
-        {
-            TextView txt1 = findViewById(R.id.myText);
-            txt1.setText("Testing onPreExecute");
-        }
+
 
         protected void onPostExecute(ArrayList<String> result) {
             super.onPostExecute(result);
@@ -95,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
             for (String data : result) {
                 myString += data + "\n";
             }
-            TextView txt = (TextView) findViewById(R.id.txtView);
             //txt.setText(myString);
 
         }

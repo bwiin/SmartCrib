@@ -1,30 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_pg"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/myText"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="string/hello" />
+    android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/txtView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="string/text"
-        android:maxLines="1000"
-        android:scrollbars = "vertical"
-        />
+        android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:onClick="onGetNameClick"
-        android:text="Temp_page" />
+        <Button
+            android:id="@+id/temp_butt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="63dp"
+            android:layout_marginTop="144dp"
+            android:text="Button"
+            tools:text="Temp" />
+
+        <Button
+            android:id="@+id/heartrate_butt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/temp_butt"
+            android:layout_marginStart="65dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/main_pg"
+            android:text="HR" />
+
+        <Button
+            android:id="@+id/weight_butt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/temp_butt"
+            android:layout_marginStart="38dp"
+            android:layout_toEndOf="@+id/heartrate_butt"
+            android:text="weight" />
+    </RelativeLayout>
 
 </LinearLayout>
