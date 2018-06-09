@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@DynamoDBTable(tableName = "smartcrib-mobilehub-326166304-biometrics")
+@DynamoDBTable(tableName = "smartcrib-mobilehub-2105602681-biometrics")
 
 public class BiometricsDO {
     private String _datatype;
+    private String _timestamp;
     private Double _data;
     private Boolean _flag;
-    private String _timestamp;
 
     @DynamoDBHashKey(attributeName = "datatype")
     @DynamoDBIndexHashKey(attributeName = "datatype", globalSecondaryIndexName = "datatype-timestamp")
@@ -27,6 +27,15 @@ public class BiometricsDO {
 
     public void setDatatype(final String _datatype) {
         this._datatype = _datatype;
+    }
+    @DynamoDBRangeKey(attributeName = "timestamp")
+    @DynamoDBIndexRangeKey(attributeName = "timestamp", globalSecondaryIndexName = "datatype-timestamp")
+    public String getTimestamp() {
+        return _timestamp;
+    }
+
+    public void setTimestamp(final String _timestamp) {
+        this._timestamp = _timestamp;
     }
     @DynamoDBAttribute(attributeName = "data")
     public Double getData() {
@@ -43,14 +52,6 @@ public class BiometricsDO {
 
     public void setFlag(final Boolean _flag) {
         this._flag = _flag;
-    }
-    @DynamoDBIndexRangeKey(attributeName = "timestamp", globalSecondaryIndexName = "datatype-timestamp")
-    public String getTimestamp() {
-        return _timestamp;
-    }
-
-    public void setTimestamp(final String _timestamp) {
-        this._timestamp = _timestamp;
     }
 
 }

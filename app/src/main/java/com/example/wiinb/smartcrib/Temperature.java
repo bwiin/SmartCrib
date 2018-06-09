@@ -7,10 +7,13 @@ import android.os.Bundle;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
 
+import java.lang.ref.WeakReference;
 import java.util.Date;
 
 
@@ -39,11 +42,24 @@ public class Temperature extends AppCompatActivity {
         temp.setData(72.5);
         temp.setDatatype("temperature");
         temp.setFlag(false);
-        temp.setTimestamp(null);
-        new AWSOps().execute(temp);
+        temp.setTimestamp("2018:06:08:22:30:30");
+        new AWSOps(this).execute(temp);
     }
-    private class AWSOps extends AsyncTask<BiometricsDO, Void, Void> {
+    public void pullEntry(){
+        BiometricsDO temp;
+        //new getData().execute();
+    }
+    private static class AWSOps extends AsyncTask<BiometricsDO, Void, Void> {
+
+        private WeakReference<Temperature> activityReference;
+
+        AWSOps(Temperature context){
+            activityReference = new WeakReference<>(context);
+        }
+
         protected Void doInBackground(BiometricsDO... params) {
+            DynamoDBMapper dynamoDBMapper = null;
+
             dynamoDBMapper.save(params[0]);
             return null;
 
@@ -53,5 +69,12 @@ public class Temperature extends AppCompatActivity {
             System.out.println("done");
         }
     }
+    /*private class getData extends AsyncTask<BiometricsDO, Void, BiometricsDO >{
+        @Override
+        protected BiometricsDO doInBackground(BiometricsDO... biometricsDOS) {
+            return dynamoDBMapper.query(biometricsDOS)
+        }
+    }*/
+
 }
 
