@@ -16,7 +16,7 @@ import java.util.Set;
 public class BiometricsDO {
     private String _datatype;
     private String _timestamp;
-    private Double _data;
+    private float _data;
     private Boolean _flag;
 
     @DynamoDBHashKey(attributeName = "datatype")
@@ -37,12 +37,11 @@ public class BiometricsDO {
     public void setTimestamp(final String _timestamp) {
         this._timestamp = _timestamp;
     }
-    @DynamoDBAttribute(attributeName = "data")
-    public Double getData() {
-        return _data;
-    }
 
-    public void setData(final Double _data) {
+    @DynamoDBAttribute(attributeName = "data")
+    public float getData() {return _data;}
+
+    public void setData(final float _data) {
         this._data = _data;
     }
     @DynamoDBAttribute(attributeName = "flag")
