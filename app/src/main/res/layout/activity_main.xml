@@ -33,4 +33,5 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="133dp"
             android:text="@string/Weight" />
-    </RelativeLayout>
+
+</RelativeLayout>

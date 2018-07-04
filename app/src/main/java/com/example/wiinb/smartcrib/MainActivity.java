@@ -11,14 +11,19 @@ import android.widget.Button;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.AWSStartupHandler;
 import com.amazonaws.mobile.client.AWSStartupResult;
 
 public class MainActivity extends AppCompatActivity {
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,28 +67,47 @@ public class MainActivity extends AppCompatActivity {
 
         //AWSMobileClient.getInstance().initialize(this).execute();
 
-        //runAsyncTask();
+        runAsyncTask(butt1, butt2, butt3);
 }
 
-    private void runAsyncTask() {
-        //new fileOps().execute("http://ucfgroup7smartcrib.ddns.net/myFile.txt");
+    private void runAsyncTask(Button butt1, Button butt2, Button butt3) {
+        new fileOps(butt1, butt2, butt3).execute("http://phuocandlilianfamily.com/MFile.txt", "http://phuocandlilianfamily.com/WFile.txt");
     }
 
-    private class fileOps extends AsyncTask<String, Void, ArrayList<String>> {
+    private class fileOps extends AsyncTask<String, Void, String[]> {
+
+        Button butt1;
+        Button butt2;
+        Button butt3;
+
         ArrayList<String> myList = new ArrayList<>();
 
-        protected ArrayList<String> doInBackground(String... params) {
+        private fileOps(Button butt1, Button butt2, Button butt3){
+            this.butt1 = butt1;
+            this.butt2 = butt2;
+            this.butt3 = butt3;
+        }
+        protected String[] doInBackground(String... params) {
             try {
-                URL url = new URL(params[0]);
-                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+                System.out.println(params[0]);
+                URL url1 = new URL(params[0]);
+                BufferedReader in = new BufferedReader(new InputStreamReader(url1.openStream()));
                 String myString;
+                String[] myValues = new String[3];
+                String[] tokens;
+                int i = 0;
 
                 while ((myString = in.readLine()) != null) {
-                    //publishProgress(myString);
-                    myList.add(myString);
+                    if(myString.length()> 3){
+                    tokens = myString.split("\\s+");
+                    myValues[i] = tokens[2];
+                    i++;
+                    }
                 }
                 in.close();
-                return myList;
+
+                return myValues;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -94,15 +118,14 @@ public class MainActivity extends AppCompatActivity {
         {
                 //System.out.println(strings[0]);
         }
-
-
-        protected void onPostExecute(ArrayList<String> result) {
+        protected void onPostExecute(String[] result) {
             super.onPostExecute(result);
             String myString = "";
             for (String data : result) {
-                myString += data + "\n";
+                System.out.println(data+"\n");
             }
-            //txt.setText(myString);
+            butt1.setText(result[0]);
+
 
         }
     }
