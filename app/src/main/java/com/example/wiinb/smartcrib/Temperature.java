@@ -21,6 +21,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,10 +30,17 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
+
+import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
+import java.util.List;
 
 
 public class Temperature extends AppCompatActivity {
@@ -42,6 +50,8 @@ public class Temperature extends AppCompatActivity {
     String endStamp;
     String startStamp;
     int periodType;
+    LineGraphSeries<DataPoint> mySeries;
+    GraphView myGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +64,11 @@ public class Temperature extends AppCompatActivity {
                 .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
                 .build();
 
-        Button butt1 = (Button)findViewById(R.id.hourButt);
-        Button butt2 = (Button)findViewById(R.id.dayButt);
-        Button butt3 = (Button)findViewById(R.id.monthButt);
+        Button butt1 = (Button)findViewById(R.id.hourTempButt);
+        Button butt2 = (Button)findViewById(R.id.dayTempButt);
+        Button butt3 = (Button)findViewById(R.id.monthTempButt);
+
+        myGraph = (GraphView) findViewById(R.id.myGraph);
 
         butt1.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -65,7 +77,7 @@ public class Temperature extends AppCompatActivity {
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("hour");
 
-                new getData(Temperature.this , dynamoDBMapper, endStamp, startStamp).execute();
+                new getData(Temperature.this , dynamoDBMapper, myGraph, endStamp, startStamp).execute();
             }
         });
         butt2.setOnClickListener(new View.OnClickListener(){
@@ -75,7 +87,7 @@ public class Temperature extends AppCompatActivity {
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("day");
 
-                new getData(Temperature.this , dynamoDBMapper, endStamp, startStamp).execute();
+                new getData(Temperature.this , dynamoDBMapper, myGraph, endStamp, startStamp).execute();
             }
         });
         butt3.setOnClickListener(new View.OnClickListener(){
@@ -85,13 +97,13 @@ public class Temperature extends AppCompatActivity {
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("month");
 
-                new getData(Temperature.this, dynamoDBMapper, endStamp, startStamp).execute();
-            }
-        });
-        //createEntry();,
-    }
-    //creates the timestamp and also processes the timestampRange.
-    private String buildTimestamp(String timestampRange){
+                new getData(Temperature.this, dynamoDBMapper, myGraph, endStamp, startStamp).execute();
+         }
+         });
+         //createEntry();,
+         }
+//creates the timestamp and also processes the timestampRange.
+private String buildTimestamp(String timestampRange){
         String now;
 
         Date date = Calendar.getInstance().getTime();
@@ -100,10 +112,10 @@ public class Temperature extends AppCompatActivity {
         now = subtractDate(now, timestampRange);
 
         return now;
-    }
-    //this function modifies the date in however you want. This is used to convert timezones, and
-    //get a start date and end date.
-    private String subtractDate(String date, String timestampRange){
+        }
+//this function modifies the date in however you want. This is used to convert timezones, and
+//get a start date and end date.
+private String subtractDate(String date, String timestampRange){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm:s");
         String returnValue = "";
         if (timestampRange == "hour") {
@@ -115,8 +127,8 @@ public class Temperature extends AppCompatActivity {
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
-                e.printStackTrace();
-            }
+        e.printStackTrace();
+        }
         }
         else if(timestampRange == "day")
         {
@@ -125,11 +137,12 @@ public class Temperature extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
                 cal.add(Calendar.DAY_OF_MONTH, -1);
+                cal.add(Calendar.HOUR, +5);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+        }
         }
         else if(timestampRange == "month"){
             try {
@@ -137,10 +150,11 @@ public class Temperature extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
                 cal.add(Calendar.MONTH, -1);
+                cal.add(Calendar.HOUR, +5);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
-                e.printStackTrace();
+            e.printStackTrace();
             }
         }
         else
@@ -157,96 +171,100 @@ public class Temperature extends AppCompatActivity {
             }
         }
         return returnValue;
-    }
-    public void createEntry(){
-        final BiometricsDO temp = new BiometricsDO();
+        }
+public void createEntry(){
+final BiometricsDO temp = new BiometricsDO();
 
         //temp.setData(72.5);
         //temp.setDatatype("temperature");
         //temp.setFlag(false);
         //temp.setTimestamp("2018:06:08:22:30:30");
         //new AWSOps(this).execute();
+        }
+
+private static class AWSOps extends AsyncTask<BiometricsDO, Void, Void> {
+
+    private WeakReference<Temperature> activityReference;
+
+    AWSOps(Temperature context){
+        activityReference = new WeakReference<>(context);
     }
 
-    private static class AWSOps extends AsyncTask<BiometricsDO, Void, Void> {
+    protected Void doInBackground(BiometricsDO... params) {
 
-        private WeakReference<Temperature> activityReference;
+        DynamoDBMapper dynamoDBMapper = null;
 
-        AWSOps(Temperature context){
-            activityReference = new WeakReference<>(context);
-        }
+        //dynamoDBMapper.save(params[0]);
+        return null;
 
-        protected Void doInBackground(BiometricsDO... params) {
-
-            DynamoDBMapper dynamoDBMapper = null;
-
-            //dynamoDBMapper.save(params[0]);
-            return null;
-
-        }
-
-        protected void onPostExecute() {
-            System.out.println("done");
-        }
     }
-    private static class getData extends AsyncTask<BiometricsDO, Void, BiometricsDO> {
 
-        private WeakReference<Temperature> activityReference;
-        DynamoDBMapper dynamoDBMapper;
-        String endStamp;
-        String startStamp;
+    protected void onPostExecute() {
+        System.out.println("done");
+    }
+}
+private static class getData extends AsyncTask<BiometricsDO, Void, ArrayList<Float>> {
 
-        getData(Temperature context, DynamoDBMapper dynamoDBMapper, String endStamp, String startStamp){
-            activityReference = new WeakReference<>(context);
-            this.dynamoDBMapper = dynamoDBMapper;
-            this.endStamp = endStamp;
-            this.startStamp = startStamp;
-        }
-        @Override
-        protected BiometricsDO doInBackground(BiometricsDO... biometricsDOS) {
+    private WeakReference<Temperature> activityReference;
+    ArrayList<Float> resultList = new ArrayList<Float>();
+    DynamoDBMapper dynamoDBMapper;
+    String endStamp;
+    String startStamp;
+    GraphView myGraph;
 
-            BiometricsDO bio = new BiometricsDO();
-            bio.setDatatype("temperature");
+    getData(Temperature context, DynamoDBMapper dynamoDBMapper, GraphView myGraph, String endStamp, String startStamp){
+        activityReference = new WeakReference<>(context);
+        this.dynamoDBMapper = dynamoDBMapper;
+        this.endStamp = endStamp;
+        this.startStamp = startStamp;
+        this.myGraph = myGraph;
+    }
+    @Override
+    protected ArrayList<Float> doInBackground(BiometricsDO... biometricsDOS) {
+        BiometricsDO bio = new BiometricsDO();
+        bio.setDatatype("temperature");
 
-            Condition rangeKeyCondition = new Condition()
-                    .withComparisonOperator(ComparisonOperator.BETWEEN)
-                    .withAttributeValueList(
-                            new AttributeValue().withS(startStamp),
-                            new AttributeValue().withS(endStamp));
+        Condition rangeKeyCondition = new Condition()
+                .withComparisonOperator(ComparisonOperator.BETWEEN)
+                .withAttributeValueList(
+                        new AttributeValue().withS(startStamp),
+                        new AttributeValue().withS(endStamp));
 
-            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
-                    .withHashKeyValues(bio)
-                    .withRangeKeyCondition("timestamp", rangeKeyCondition)
-                    .withConsistentRead(false);
+        DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
+                .withHashKeyValues(bio)
+                .withRangeKeyCondition("timestamp", rangeKeyCondition)
+                .withConsistentRead(false);
 
-            PaginatedList<BiometricsDO> resultQuery = dynamoDBMapper.query(BiometricsDO.class, queryExpression);
+        //this returns a java
+        PaginatedList<BiometricsDO> resultQuery = dynamoDBMapper.query(BiometricsDO.class, queryExpression);
 
-            Gson gson = new Gson();
-            StringBuilder stringBuilder = new StringBuilder();
+        Gson gson = new Gson();
 
-            // Loop through query results
+        // Loop through query results
+        try {
             for (int i = 0; i < resultQuery.size(); i++) {
-                String jsonFormOfItem = gson.toJson(resultQuery.get(i));
-                stringBuilder.append(jsonFormOfItem + "\n\n");
+                resultList.add(resultQuery.get(0).getData());
             }
+        }catch(ArrayIndexOutOfBoundsException exception){
 
-            // Add your code here to deal with the data result
-            Log.d("Query result: ", stringBuilder.toString());
-
-            if (resultQuery.isEmpty()) {
-                System.out.println("There were no items matching your query.");
-            }
-
-            return dynamoDBMapper.load(BiometricsDO.class, "weight", "2018:07:06:23:45:04");
         }
 
-        //use onPostExecute to send data from queries to be used in another method.
-        @Override
-        protected void onPostExecute(BiometricsDO result) {
-            System.out.println(result.getData());
-            System.out.println("OPE");
+        if (resultQuery.isEmpty()) {
+            System.out.println("There were no items matching your query.");
+        }
+
+        return resultList;
+    }
+
+    //use onPostExecute to send data from queries to be used in another method.
+    @Override
+    protected void onPostExecute(ArrayList<Float> resultList) {
+        System.out.println("OPE");
+        for (int i = 0; i < resultList.size(); i++) {
+            System.out.println(resultList.get(i));
         }
     }
+}
 
 }
 

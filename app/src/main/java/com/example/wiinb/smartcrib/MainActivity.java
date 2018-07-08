@@ -22,7 +22,8 @@ import com.amazonaws.mobile.client.AWSStartupResult;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    Button butt1, butt2, butt3;
+    boolean one, two, three;
 
 
     @Override
@@ -37,60 +38,85 @@ public class MainActivity extends AppCompatActivity {
             }
         }).execute();
 
+        one = false;
+        two = false;
+        three = false;
 
-        Button butt1 = (Button)findViewById(R.id.temp_butt);
-        Button butt2 = (Button)findViewById(R.id.heartrate_butt);
-        Button butt3 = (Button)findViewById(R.id.weight_butt);
+        butt1 = (Button)findViewById(R.id.temp_butt);
+        butt2 = (Button)findViewById(R.id.heartrate_butt);
+        butt3 = (Button)findViewById(R.id.weight_butt);
+
 
         butt1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent int1 = new Intent(MainActivity.this, Temperature.class);
-                startActivity(int1);
+                if (one == false){
+                    runAsyncTask(butt1, 0);
+                    one = true;
+
+                }else {
+                    Intent int1 = new Intent(MainActivity.this, Temperature.class);
+                    one = false;
+                    butt1.setText("Temperature");
+                    startActivity(int1);
+
+                }
             }
         });
         butt2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent int2 = new Intent(MainActivity.this, HeartRate.class);
-                startActivity(int2);
+                if (two == false)
+                {
+                    runAsyncTask(butt2, 1);
+                    two = true;
+
+                }else {
+                    Intent int2 = new Intent(MainActivity.this, HeartRate.class);
+                    two = false;
+                    butt2.setText("HR");
+                    startActivity(int2);
+                }
             }
         });
 
         butt3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent int3 = new Intent(MainActivity.this, Weight.class);
-                startActivity(int3);
+                if (three == false)
+                {
+                    runAsyncTask(butt3, 2);
+                    three = true;
+                }else {
+                    Intent int3 = new Intent(MainActivity.this, Weight.class);
+                    three = false;
+                    butt3.setText("Weight");
+                    startActivity(int3);
+                }
             }
         });
 
         //AWSMobileClient.getInstance().initialize(this).execute();
-
-        runAsyncTask(butt1, butt2, butt3);
 }
 
-    private void runAsyncTask(Button butt1, Button butt2, Button butt3) {
-        new fileOps(butt1, butt2, butt3).execute("http://phuocandlilianfamily.com/MFile.txt", "http://phuocandlilianfamily.com/WFile.txt");
+    private void runAsyncTask(Button myButt, int datatype) {
+        new fileOps(myButt, datatype).execute("http://phuocandlilianfamily.com/MFile.txt", "http://phuocandlilianfamily.com/WFile.txt");
     }
 
     private class fileOps extends AsyncTask<String, Void, String[]> {
 
-        Button butt1;
-        Button butt2;
-        Button butt3;
-
+        Button myButt;
+        int datatype;
         ArrayList<String> myList = new ArrayList<>();
 
-        private fileOps(Button butt1, Button butt2, Button butt3){
-            this.butt1 = butt1;
-            this.butt2 = butt2;
-            this.butt3 = butt3;
+
+        private fileOps(Button myButt, int datatype){
+            this.myButt = myButt;
+            this.datatype = datatype;
         }
+
         protected String[] doInBackground(String... params) {
             try {
-
-                System.out.println(params[0]);
                 URL url1 = new URL(params[0]);
                 BufferedReader in = new BufferedReader(new InputStreamReader(url1.openStream()));
                 String myString;
@@ -124,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             for (String data : result) {
                 System.out.println(data+"\n");
             }
-            butt1.setText(result[0]);
+            myButt.setText(result[datatype]);
 
 
         }
