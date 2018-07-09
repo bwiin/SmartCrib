@@ -21,6 +21,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,6 +30,9 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.google.gson.Gson;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 
 import java.lang.ref.WeakReference;
@@ -41,8 +45,7 @@ public class HeartRate extends AppCompatActivity {
     String endStamp;
     String startStamp;
     int periodType;
-
-
+    GraphView myGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,13 @@ public class HeartRate extends AppCompatActivity {
         Button butt2 = (Button)findViewById(R.id.dayHRButt);
         Button butt3 = (Button)findViewById(R.id.monthHRButt);
 
+        myGraph = (GraphView) findViewById(R.id.myGraph);
+
+        myGraph.getViewport().setYAxisBoundsManual(true);
+        myGraph.getViewport().setMinY(50);
+        myGraph.getViewport().setMaxY(250);
+        myGraph.getViewport().setScalable(true);
+
         butt1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -66,7 +76,7 @@ public class HeartRate extends AppCompatActivity {
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("hour");
 
-                new getData(HeartRate.this , dynamoDBMapper, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
             }
         });
         butt2.setOnClickListener(new View.OnClickListener(){
@@ -76,7 +86,7 @@ public class HeartRate extends AppCompatActivity {
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("day");
 
-                new getData(HeartRate.this , dynamoDBMapper, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
             }
         });
         butt3.setOnClickListener(new View.OnClickListener(){
@@ -86,7 +96,7 @@ public class HeartRate extends AppCompatActivity {
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("month");
 
-                new getData(HeartRate.this, dynamoDBMapper, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
             }
         });
     }
@@ -111,7 +121,7 @@ public class HeartRate extends AppCompatActivity {
                 Date newDate = formatter.parse(date);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
-                cal.add(Calendar.HOUR, +4);
+                cal.add(Calendar.HOUR, -1);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
@@ -123,7 +133,6 @@ public class HeartRate extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
                 cal.add(Calendar.DAY_OF_MONTH, -1);
-                cal.add(Calendar.HOUR, +5);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
@@ -135,41 +144,40 @@ public class HeartRate extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
                 cal.add(Calendar.MONTH, -1);
-                cal.add(Calendar.HOUR, +5);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
+        }else {
             try {
                 Date newDate = formatter.parse(date);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
-                cal.add(Calendar.HOUR, +5);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         return returnValue;
     }
-    private static class getData extends AsyncTask<BiometricsDO, Void, BiometricsDO> {
+    private static class getData extends AsyncTask<BiometricsDO, Void, ArrayList<Float>> {
 
-        private WeakReference<HeartRate> activityReference;
+        ArrayList<Float> resultList = new ArrayList<Float>();
         DynamoDBMapper dynamoDBMapper;
         String endStamp;
         String startStamp;
+        GraphView myGraph;
+        LineGraphSeries<DataPoint> mySeries;
 
-        getData(HeartRate context, DynamoDBMapper dynamoDBMapper, String endStamp, String startStamp){
-            activityReference = new WeakReference<>(context);
+        getData(DynamoDBMapper dynamoDBMapper, GraphView myGraph, String endStamp, String startStamp){
             this.dynamoDBMapper = dynamoDBMapper;
             this.endStamp = endStamp;
             this.startStamp = startStamp;
+            this.myGraph = myGraph;
         }
         @Override
-        protected BiometricsDO doInBackground(BiometricsDO... biometricsDOS) {
+        protected ArrayList<Float> doInBackground(BiometricsDO... biometricsDOS) {
 
             BiometricsDO bio = new BiometricsDO();
             bio.setDatatype("heartrate");
@@ -204,14 +212,22 @@ public class HeartRate extends AppCompatActivity {
                 System.out.println("There were no items matching your query.");
             }
 
-            return dynamoDBMapper.load(BiometricsDO.class, "weight", "2018:07:06:23:45:04");
+            return resultList;
         }
 
         //use onPostExecute to send data from queries to be used in another method.
         @Override
-        protected void onPostExecute(BiometricsDO result) {
-            System.out.println(result.getData());
-            System.out.println("OPE");
+        protected void onPostExecute(ArrayList<Float> resultList) {
+            mySeries = new LineGraphSeries<DataPoint>();
+            for (int i = 0; i < resultList.size(); i++) {
+                System.out.println(resultList.get(i));
+                mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
+            }
+            mySeries.setDrawDataPoints(true);
+            mySeries.setAnimated(true);
+
+            //adds the series to the graph
+            myGraph.addSeries(mySeries);
         }
     }
 }

@@ -50,7 +50,6 @@ public class Temperature extends AppCompatActivity {
     String endStamp;
     String startStamp;
     int periodType;
-    LineGraphSeries<DataPoint> mySeries;
     GraphView myGraph;
 
     @Override
@@ -70,12 +69,20 @@ public class Temperature extends AppCompatActivity {
 
         myGraph = (GraphView) findViewById(R.id.myGraph);
 
+        myGraph.getViewport().setYAxisBoundsManual(true);
+        myGraph.getViewport().setMinY(50);
+        myGraph.getViewport().setMaxY(110);
+        myGraph.getViewport().setScalable(true);
+
         butt1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 periodType = 3;
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("hour");
+
+                System.out.println(endStamp);
+                System.out.println(startStamp);
 
                 new getData(Temperature.this , dynamoDBMapper, myGraph, endStamp, startStamp).execute();
             }
@@ -123,7 +130,7 @@ private String subtractDate(String date, String timestampRange){
                 Date newDate = formatter.parse(date);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
-                cal.add(Calendar.HOUR, +4);
+                cal.add(Calendar.HOUR, -1);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
@@ -137,7 +144,6 @@ private String subtractDate(String date, String timestampRange){
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
                 cal.add(Calendar.DAY_OF_MONTH, -1);
-                cal.add(Calendar.HOUR, +5);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
@@ -150,24 +156,20 @@ private String subtractDate(String date, String timestampRange){
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
                 cal.add(Calendar.MONTH, -1);
-                cal.add(Calendar.HOUR, +5);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
             e.printStackTrace();
             }
         }
-        else
-        {
+        else {
             try {
                 Date newDate = formatter.parse(date);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(newDate);
-                cal.add(Calendar.HOUR, +5);
                 Date minusOne = cal.getTime();
                 returnValue = formatter.format(minusOne);
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         return returnValue;
@@ -211,6 +213,7 @@ private static class getData extends AsyncTask<BiometricsDO, Void, ArrayList<Flo
     String endStamp;
     String startStamp;
     GraphView myGraph;
+    LineGraphSeries<DataPoint> mySeries;
 
     getData(Temperature context, DynamoDBMapper dynamoDBMapper, GraphView myGraph, String endStamp, String startStamp){
         activityReference = new WeakReference<>(context);
@@ -243,7 +246,7 @@ private static class getData extends AsyncTask<BiometricsDO, Void, ArrayList<Flo
         // Loop through query results
         try {
             for (int i = 0; i < resultQuery.size(); i++) {
-                resultList.add(resultQuery.get(0).getData());
+                resultList.add(Float.parseFloat(resultQuery.get(0).getData()));
             }
         }catch(ArrayIndexOutOfBoundsException exception){
 
@@ -259,10 +262,18 @@ private static class getData extends AsyncTask<BiometricsDO, Void, ArrayList<Flo
     //use onPostExecute to send data from queries to be used in another method.
     @Override
     protected void onPostExecute(ArrayList<Float> resultList) {
-        System.out.println("OPE");
+        mySeries = new LineGraphSeries<DataPoint>();
         for (int i = 0; i < resultList.size(); i++) {
             System.out.println(resultList.get(i));
+            mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
         }
+        mySeries.setDrawDataPoints(true);
+        mySeries.setAnimated(true);
+
+
+        //adds the series to the graph
+        myGraph.addSeries(mySeries);
+
     }
 }
 
