@@ -1,12 +1,21 @@
 package com.example.wiinb.smartcrib;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.MediaController;
+import android.widget.Toast;
+import android.widget.VideoView;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,14 +25,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.UUID;
 
+
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.AWSStartupHandler;
 import com.amazonaws.mobile.client.AWSStartupResult;
 
+
 public class MainActivity extends AppCompatActivity {
 
+    private static final int TIMEOUT = 0;
     Button butt1, butt2, butt3;
     boolean one, two, three;
+
 
 
     @Override
@@ -38,13 +51,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }).execute();
 
-        one = false;
-        two = false;
-        three = false;
 
         butt1 = (Button)findViewById(R.id.temp_butt);
         butt2 = (Button)findViewById(R.id.heartrate_butt);
         butt3 = (Button)findViewById(R.id.weight_butt);
+        
+        WebView wbb = (WebView) findViewById(R.id.webviewer);
+        WebSettings wbset=wbb.getSettings();
+        wbset.setJavaScriptEnabled(true);
+        wbb.setWebViewClient(new WebViewClient());
+        String url="http://72.238.95.237:8081/";
+        wbb.loadUrl(url);
 
 
         butt1.setOnClickListener(new View.OnClickListener(){
@@ -68,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 if (two == false)
                 {
-                    runAsyncTask(butt2, 1);
+                    runAsyncTask(butt2, 3);
                     two = true;
 
                 }else {
@@ -85,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 if (three == false)
                 {
-                    runAsyncTask(butt3, 2);
+                    runAsyncTask(butt3, 1);
                     three = true;
                 }else {
                     Intent int3 = new Intent(MainActivity.this, Weight.class);
@@ -98,16 +115,16 @@ public class MainActivity extends AppCompatActivity {
 
         //AWSMobileClient.getInstance().initialize(this).execute();
 }
-
     private void runAsyncTask(Button myButt, int datatype) {
         new fileOps(myButt, datatype).execute("http://phuocandlilianfamily.com/MFile.txt", "http://phuocandlilianfamily.com/WFile.txt");
     }
 
-    private class fileOps extends AsyncTask<String, Void, String[]> {
+    private class fileOps extends AsyncTask<String, Void, ArrayList<Float>> {
 
         Button myButt;
         int datatype;
-        ArrayList<String> myList = new ArrayList<>();
+        ArrayList<Float> myValueList = new ArrayList<>();
+        String[] units = {"C" , "LB" , "CRY", "BPM"};
 
 
         private fileOps(Button myButt, int datatype){
@@ -115,25 +132,36 @@ public class MainActivity extends AppCompatActivity {
             this.datatype = datatype;
         }
 
-        protected String[] doInBackground(String... params) {
+        protected ArrayList<Float> doInBackground(String... params) {
             try {
                 URL url1 = new URL(params[0]);
-                BufferedReader in = new BufferedReader(new InputStreamReader(url1.openStream()));
+                URL url2 = new URL(params[1]);
+                BufferedReader in1 = new BufferedReader(new InputStreamReader(url1.openStream()));
+                BufferedReader in2 = new BufferedReader(new InputStreamReader(url2.openStream()));
                 String myString;
-                String[] myValues = new String[3];
                 String[] tokens;
                 int i = 0;
+                int j = 0;
 
-                while ((myString = in.readLine()) != null) {
-                    if(myString.length()> 3){
+                while ((myString = in1.readLine()) != null) {
+
                     tokens = myString.split("\\s+");
-                    myValues[i] = tokens[2];
-                    i++;
-                    }
+                    if(i <= 1) {
+                        myValueList.add(Float.parseFloat(tokens[2]) / 100);
+                        i++;
+                    }else{
+                        myValueList.add(Float.parseFloat(tokens[2]));
+                        i++;}
                 }
-                in.close();
+                while((myString = in2.readLine()) != null){
+                    tokens = myString.split("\\s+");
+                    myValueList.add(Float.parseFloat(tokens[2]));
+                    j++;
+                }
+                in1.close();
+                in2.close();
 
-                return myValues;
+                return myValueList;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -142,17 +170,13 @@ public class MainActivity extends AppCompatActivity {
         }
         protected void publishProgress(String...strings)
         {
-                //System.out.println(strings[0]);
         }
-        protected void onPostExecute(String[] result) {
+        protected void onPostExecute(ArrayList<Float> result) {
             super.onPostExecute(result);
-            String myString = "";
-            for (String data : result) {
-                System.out.println(data+"\n");
-            }
-            myButt.setText(result[datatype]);
+            myButt.setText(Float.toString(result.get(datatype)) + units[datatype]);
 
 
         }
     }
+
 }
