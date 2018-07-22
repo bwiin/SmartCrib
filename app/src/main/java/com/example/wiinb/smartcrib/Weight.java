@@ -221,11 +221,12 @@ public class Weight extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Float> resultList) {
             mySeries = new LineGraphSeries<DataPoint>();
             for (int i = 0; i < resultList.size(); i++) {
-                System.out.println(resultList.get(i));
+                //System.out.println(resultList.get(i));
                 mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
             }
             mySeries.setDrawDataPoints(true);
             mySeries.setAnimated(true);
+            myGraph.getViewport().setMaxX(resultList.size());
 
             //adds the series to the graph
             myGraph.addSeries(mySeries);

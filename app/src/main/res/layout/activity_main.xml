@@ -2,36 +2,59 @@
 
 
 <RelativeLayout android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent"
+    xmlns:stream="http://schemas.android.com/apk/res-auto"
+    android:background="#EE7469"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"><![CDATA[
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:stream="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.github.niqdev.ipcam.IpCamDefaultActivity">
 
-<Button
-    android:id="@+id/temp_butt"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="66dp"
-    android:text="@string/Temperature"
-    tools:text="Temp" />
+    ]]>
 
-<Button
-    android:id="@+id/heartrate_butt"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="200dp"
-    android:text="@string/HeartRate" />
+    <Button
+        android:id="@+id/temp_butt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="66dp"
+        android:background="@android:drawable/radiobutton_off_background"
+        android:text="@string/Temperature"
+        tools:text="Temp" />
 
-<Button
-    android:id="@+id/weight_butt"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="133dp"
-    android:text="@string/Weight" />
+    <Button
+        android:id="@+id/heartrate_butt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="200dp"
+        android:background="@android:drawable/radiobutton_off_background"
+        android:text="@string/HeartRate" />
+
+    <Button
+        android:id="@+id/weight_butt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="133dp"
+        android:background="@android:drawable/radiobutton_off_background"
+        android:text="@string/Weight" />
+
+    <WebView
+        android:id= "@+id/webviewer"
+        android:layout_width="383dp"
+        android:layout_height="263dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/temp_butt"
+        android:layout_marginStart="-148dp"
+        android:layout_marginTop="0dp" />
+
 
 </RelativeLayout>

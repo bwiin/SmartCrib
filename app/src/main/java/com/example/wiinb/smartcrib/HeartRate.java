@@ -196,17 +196,14 @@ public class HeartRate extends AppCompatActivity {
             PaginatedList<BiometricsDO> resultQuery = dynamoDBMapper.query(BiometricsDO.class, queryExpression);
 
             Gson gson = new Gson();
-            StringBuilder stringBuilder = new StringBuilder();
-
             // Loop through query results
-            for (int i = 0; i < resultQuery.size(); i++) {
-                String jsonFormOfItem = gson.toJson(resultQuery.get(i));
-                System.out.println(jsonFormOfItem);
-                stringBuilder.append(jsonFormOfItem + "\n\n");
-            }
+            try {
+                for (int i = 0; i < resultQuery.size(); i++) {
+                    resultList.add(Float.parseFloat(resultQuery.get(0).getData()));
+                }
+            }catch(ArrayIndexOutOfBoundsException exception){
 
-            // Add your code here to deal with the data result
-            //Log.d("Query result: ", stringBuilder.toString());
+            }
 
             if (resultQuery.isEmpty()) {
                 System.out.println("There were no items matching your query.");
@@ -220,11 +217,13 @@ public class HeartRate extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Float> resultList) {
             mySeries = new LineGraphSeries<DataPoint>();
             for (int i = 0; i < resultList.size(); i++) {
-                System.out.println(resultList.get(i));
+                //System.out.println(resultList.get(i));
                 mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
             }
             mySeries.setDrawDataPoints(true);
             mySeries.setAnimated(true);
+            myGraph.getViewport().setMaxX(resultList.size());
+
 
             //adds the series to the graph
             myGraph.addSeries(mySeries);

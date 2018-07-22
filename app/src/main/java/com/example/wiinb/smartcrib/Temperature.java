@@ -70,8 +70,8 @@ public class Temperature extends AppCompatActivity {
         myGraph = (GraphView) findViewById(R.id.myGraph);
 
         myGraph.getViewport().setYAxisBoundsManual(true);
-        myGraph.getViewport().setMinY(50);
-        myGraph.getViewport().setMaxY(110);
+        myGraph.getViewport().setMinY(0);
+        myGraph.getViewport().setMaxY(50);
         myGraph.getViewport().setScalable(true);
 
         butt1.setOnClickListener(new View.OnClickListener(){
@@ -264,11 +264,13 @@ private static class getData extends AsyncTask<BiometricsDO, Void, ArrayList<Flo
     protected void onPostExecute(ArrayList<Float> resultList) {
         mySeries = new LineGraphSeries<DataPoint>();
         for (int i = 0; i < resultList.size(); i++) {
-            System.out.println(resultList.get(i));
+            //System.out.println(resultList.get(i));
             mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
         }
         mySeries.setDrawDataPoints(true);
         mySeries.setAnimated(true);
+        myGraph.getViewport().setMaxX(resultList.size());
+
 
 
         //adds the series to the graph

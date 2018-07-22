@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "934654222770",
+    "firebase_url": "https://fir-smartcrib.firebaseio.com",
+    "project_id": "fir-smartcrib",
+    "storage_bucket": "fir-smartcrib.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934654222770:android:386a4370f57ffd79",
+        "android_client_info": {
+          "package_name": "com.example.wiinb.smartcrib"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "934654222770-7b77m1h88lapmsoi7ta3ugj3ug24ui41.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wiinb.smartcrib",
+            "certificate_hash": "072e64001336d6c060613acc1787b2bd697e80cb"
+          }
+        },
+        {
+          "client_id": "934654222770-oog1an4q1gubpri3oktmlg0qutnvf0mg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtoBg-cCGqsJgvOvlMEI1e5ij3YBo0OH0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "934654222770-oog1an4q1gubpri3oktmlg0qutnvf0mg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,12 @@ import java.util.UUID;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.AWSStartupHandler;
 import com.amazonaws.mobile.client.AWSStartupResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
+import static android.content.ContentValues.TAG;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
             }
         }).execute();
-
 
         butt1 = (Button)findViewById(R.id.temp_butt);
         butt2 = (Button)findViewById(R.id.heartrate_butt);
