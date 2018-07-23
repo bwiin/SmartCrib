@@ -4,7 +4,7 @@
 <RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:stream="http://schemas.android.com/apk/res-auto"
-    android:background="#EE7469"
+    android:background="#FF000000"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"><![CDATA[
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,8 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="66dp"
-        android:background="@android:drawable/radiobutton_off_background"
+        android:layout_marginBottom="120dp"
         android:text="@string/Temperature"
         tools:text="Temp" />
 
@@ -33,8 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="200dp"
-        android:background="@android:drawable/radiobutton_off_background"
+        android:layout_marginBottom="240dp"
         android:text="@string/HeartRate" />
 
     <Button
@@ -43,17 +41,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="133dp"
-        android:background="@android:drawable/radiobutton_off_background"
+        android:layout_marginBottom="180dp"
         android:text="@string/Weight" />
 
     <WebView
-        android:id= "@+id/webviewer"
-        android:layout_width="383dp"
-        android:layout_height="263dp"
+        android:id="@+id/webviewer"
+        android:layout_width="match_parent"
+        android:layout_height="261dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/temp_butt"
-        android:layout_marginStart="-148dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="0dp" />
 
 
