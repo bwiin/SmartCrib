@@ -7,36 +7,33 @@
 
     <Button
         android:id="@+id/hourHRButt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="63dp"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/dayHRButt"
-        android:layout_marginStart="14dp"
-        android:text="Hour"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="432dp" />
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="37dp"
+
+        android:text="Hour" />
 
     <Button
         android:id="@+id/dayHRButt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="63dp"
         android:layout_alignTop="@+id/monthHRButt"
         android:layout_centerHorizontal="true"
-        android:text="Day"
-        tools:layout_editor_absoluteX="122dp"
-        tools:layout_editor_absoluteY="432dp" />
+
+        android:text="Day" />
 
     <Button
         android:id="@+id/monthHRButt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="63dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="38dp"
-        android:layout_marginEnd="45dp"
-        android:text="Month"
-        tools:layout_editor_absoluteX="238dp"
-        tools:layout_editor_absoluteY="432dp" />
+        android:layout_marginBottom="37dp"
+        android:layout_marginEnd="30dp"
+        android:text="Month" />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"

@@ -8,37 +8,32 @@
 
     <Button
         android:id="@+id/monthWeightButt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="63dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/sixmonthWeightButt"
-        android:layout_marginStart="32dp"
-        android:text="Month"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="417dp" />
+        android:layout_marginBottom="37dp"
+        android:layout_marginStart="30dp"
+        android:text="Month" />
 
     <Button
         android:id="@+id/yearWeightButt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="63dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/monthWeightButt"
-        android:layout_marginEnd="15dp"
-        android:text="Year"
-        tools:layout_editor_absoluteX="228dp"
-        tools:layout_editor_absoluteY="417dp" />
+        android:layout_marginBottom="37dp"
+        android:layout_marginEnd="30dp"
+        android:text="Year" />
 
     <Button
         android:id="@+id/sixmonthWeightButt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="57dp"
-        android:layout_marginEnd="126dp"
-        android:text="6 Months"
-        tools:layout_editor_absoluteX="131dp"
-        tools:layout_editor_absoluteY="417dp" />
+        android:layout_width="100dp"
+        android:layout_height="63dp"
+        android:layout_alignTop="@+id/monthWeightButt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="37dp"
+        android:text="6 Months" />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
