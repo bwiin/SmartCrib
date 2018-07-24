@@ -1,6 +1,7 @@
 package com.example.wiinb.smartcrib;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -68,6 +69,16 @@ public class Weight extends AppCompatActivity {
         myGraph.getViewport().setMinY(3);
         myGraph.getViewport().setMaxY(40);
         myGraph.getViewport().setScalable(true);
+
+        myGraph.getGridLabelRenderer().setGridColor(Color.WHITE);
+        myGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(255,215,0));
+        myGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(255,215,0));
+
+
+        myGraph.getViewport().setBackgroundColor(Color.BLACK);
+        myGraph.getViewport().setDrawBorder(true);
+        myGraph.getViewport().setBorderColor(Color.WHITE);
+
 
         butt1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,7 +238,7 @@ public class Weight extends AppCompatActivity {
             mySeries.setDrawDataPoints(true);
             mySeries.setAnimated(true);
             myGraph.getViewport().setMaxX(resultList.size());
-
+            mySeries.setColor(Color.rgb(255,215,0));
             //adds the series to the graph
             myGraph.addSeries(mySeries);
         }

@@ -79,5 +79,8 @@
     <string name = "HeartRate">HR</string>
     <string name = "Temperature">Temp</string>
     <string name = "Weight">Weight</string>
+    <string name="heartrate">HeartRate</string>
+    <string name="options">Options</string>
+    <string name="temperature">Temperature</string>
 
 </resources>

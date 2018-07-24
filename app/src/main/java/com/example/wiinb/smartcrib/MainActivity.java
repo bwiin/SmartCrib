@@ -41,10 +41,8 @@ import static android.content.ContentValues.TAG;
 public class MainActivity extends AppCompatActivity {
 
     private static final int TIMEOUT = 0;
-    Button butt1, butt2, butt3;
+    Button butt1, butt2, butt3, butt4;
     boolean one, two, three;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +52,14 @@ public class MainActivity extends AppCompatActivity {
         AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
             @Override
             public void onComplete(AWSStartupResult awsStartupResult) {
-                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
+                Log.d("MainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
             }
         }).execute();
 
         butt1 = (Button)findViewById(R.id.temp_butt);
         butt2 = (Button)findViewById(R.id.heartrate_butt);
         butt3 = (Button)findViewById(R.id.weight_butt);
+        butt4 = (Button)findViewById(R.id.options_butt);
         
         WebView wbb = (WebView) findViewById(R.id.webviewer);
         WebSettings wbset=wbb.getSettings();
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     Intent int2 = new Intent(MainActivity.this, HeartRate.class);
                     two = false;
-                    butt2.setText("HR");
+                    butt2.setText("HeartRate");
                     startActivity(int2);
                 }
             }
@@ -116,6 +115,14 @@ public class MainActivity extends AppCompatActivity {
                     butt3.setText("Weight");
                     startActivity(int3);
                 }
+            }
+        });
+
+        butt4.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                    Intent int4 = new Intent(MainActivity.this, Options.class);
+                    startActivity(int4);
             }
         });
 

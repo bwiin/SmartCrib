@@ -3,6 +3,7 @@
 
 <RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FF000000"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -13,8 +14,9 @@
         android:layout_height="63dp"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/dayTempButt"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="25dp"
         android:layout_marginBottom="37dp"
+        android:background = "#FFD700"
         android:text="Hour" />
 
     <Button
@@ -24,6 +26,7 @@
         android:layout_alignTop="@+id/monthTempButt"
         android:layout_marginBottom="37dp"
         android:layout_centerHorizontal="true"
+        android:background = "#FFD700"
         android:text="Day" />
 
     <Button
@@ -33,12 +36,14 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="37dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="25dp"
+        android:background = "#FFD700"
         android:text="Month" />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_height="419dp"
+        android:layout_height="380dp"
+        app:seriesColor = "#ffffff"
         android:id="@+id/myGraph"/>
 
 </RelativeLayout>

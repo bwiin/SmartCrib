@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-
 <RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:stream="http://schemas.android.com/apk/res-auto"
     android:background="#FF000000"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"><![CDATA[
@@ -13,39 +10,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.niqdev.ipcam.IpCamDefaultActivity">
-
     ]]>
 
     <Button
         android:id="@+id/temp_butt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:background = "#FFD700"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="120dp"
-        android:text="@string/Temperature"
-        tools:text="Temp" />
+        android:layout_marginBottom="30dp"
+        android:text="@string/temperature" />
 
     <Button
         android:id="@+id/heartrate_butt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="240dp"
-        android:text="@string/HeartRate" />
+        android:layout_marginBottom="100dp"
+        android:background = "#FFD700"
+        android:text="@string/heartrate" />
 
     <Button
         android:id="@+id/weight_butt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="180dp"
+        android:layout_marginBottom="170dp"
+        android:background = "#FFD700"
         android:text="@string/Weight" />
 
-    
+    <Button
+        android:id="@+id/options_butt"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@android:drawable/ic_menu_preferences" />
+
     <WebView
         android:id="@+id/webviewer"
         android:layout_width="match_parent"
