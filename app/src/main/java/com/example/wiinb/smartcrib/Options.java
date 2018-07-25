@@ -36,9 +36,6 @@ public class Options extends AppCompatActivity {
         setContentView(R.layout.activity_options);
 
         butt1 = (Button)findViewById(R.id.rweight);
-        butt2 = (Button)findViewById(R.id.parent1);
-        butt3 = (Button)findViewById(R.id.parent2);
-        butt4 = (Button)findViewById(R.id.parentboth);
 
         butt1.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -89,12 +86,28 @@ public class Options extends AppCompatActivity {
                 AsyncTask.execute(runnable);
                 */
 
+                /*Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Webb webb = Webb.create();
+                        webb.post("http://phuocandlilianfamily.com/PW=group7.CTRL.php")
+                                .param("w", "b")
+                                .ensureSuccess()
+                                .asVoid();
+                    }
+                };
+                AsyncTask.execute(runnable);
+
+
+                */
+
+                char a = 'b';
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
                         Webb webb = Webb.create();
                         webb.post("http://phuocandlilianfamily.com/PW=group7.CTRL.php")
-                                .param("w", 1)
+                                .param("W", a)
                                 .ensureSuccess()
                                 .asVoid();
                     }
@@ -106,29 +119,9 @@ public class Options extends AppCompatActivity {
 
             }
         });
-        butt2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
 
 
-            }
-        });
-        butt3.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
 
-
-            }
-        });
-        butt4.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-
-
-            }
-        });
-
-        
     }
 
 }

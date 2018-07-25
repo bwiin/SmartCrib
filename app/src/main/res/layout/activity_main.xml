@@ -16,11 +16,16 @@
         android:id="@+id/temp_butt"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:background = "#FFD700"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:text="@string/temperature" />
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/btn"
+        android:shadowColor="#3CA85D"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:text="@string/temperature"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/heartrate_butt"
@@ -28,9 +33,14 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:background = "#FFD700"
-        android:text="@string/heartrate" />
+        android:layout_marginBottom="130dp"
+        android:background="@drawable/btn"
+        android:shadowColor="#3CA85D"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:text="@string/heartrate"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/weight_butt"
@@ -38,9 +48,14 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="170dp"
-        android:background = "#FFD700"
-        android:text="@string/Weight" />
+        android:layout_marginBottom="200dp"
+        android:background="@drawable/btn"
+        android:shadowColor="#3CA85D"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:text="@string/Weight"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/options_butt"
@@ -48,6 +63,11 @@
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:textColor="#FFFFFF"
+        android:shadowColor="#3CA85D"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
         android:background="@android:drawable/ic_menu_preferences" />
 
     <WebView

@@ -21,37 +21,13 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:background="#FFD700"
+        android:background = "@drawable/pagebtn"
+        android:textColor="#FFFFFF"
+        android:shadowColor="#4CD475"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
         android:text="Reset Weight" />
 
-    <Button
-        android:id="@+id/parent1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
-        android:background="#FFD700"
-        android:text="Send Parent 1" />
-
-    <Button
-        android:id="@+id/parent2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="160dp"
-        android:background="#FFD700"
-        android:text="Send Parent 2" />
-
-    <Button
-        android:id="@+id/parentboth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="230dp"
-        android:background="#FFD700"
-        android:text="Semd Both" />
 
     </RelativeLayout>

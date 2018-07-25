@@ -15,8 +15,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/dayTempButt"
         android:layout_marginStart="25dp"
-        android:layout_marginBottom="37dp"
-        android:background = "#FFD700"
+        android:layout_marginBottom="60dp"
+        android:background = "@drawable/pagebtn"
+        android:textColor="#FFFFFF"
+        android:shadowColor="#4CD475"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
         android:text="Hour" />
 
     <Button
@@ -24,9 +29,14 @@
         android:layout_width="100dp"
         android:layout_height="63dp"
         android:layout_alignTop="@+id/monthTempButt"
-        android:layout_marginBottom="37dp"
+        android:layout_marginBottom="60dp"
         android:layout_centerHorizontal="true"
-        android:background = "#FFD700"
+        android:background = "@drawable/pagebtn"
+        android:textColor="#FFFFFF"
+        android:shadowColor="#4CD475"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
         android:text="Day" />
 
     <Button
@@ -35,15 +45,19 @@
         android:layout_height="63dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="37dp"
+        android:layout_marginBottom="60dp"
         android:layout_marginEnd="25dp"
-        android:background = "#FFD700"
+        android:background = "@drawable/pagebtn"
+        android:textColor="#FFFFFF"
+        android:shadowColor="#4CD475"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
         android:text="Month" />
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="380dp"
-        app:seriesColor = "#ffffff"
         android:id="@+id/myGraph"/>
 
 </RelativeLayout>

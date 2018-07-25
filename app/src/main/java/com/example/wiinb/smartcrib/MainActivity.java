@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         WebSettings wbset=wbb.getSettings();
         wbset.setJavaScriptEnabled(true);
         wbb.setWebViewClient(new WebViewClient());
-        String url="http://192.168.0.102:8081/";
+        String url="http://192.168.0.106:8081/";
         wbb.loadUrl(url);
 
 
