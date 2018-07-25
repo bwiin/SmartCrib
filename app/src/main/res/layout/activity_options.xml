@@ -29,5 +29,35 @@
         android:shadowRadius="5"
         android:text="Reset Weight" />
 
+    <Button
+        android:id="@+id/motionX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/pagebtn"
+        android:shadowColor="#4CD475"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:text="MotionX"
+        android:textColor="#FFFFFF" />
 
-    </RelativeLayout>
+    <Button
+        android:id="@+id/motionY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
+        android:background="@drawable/pagebtn"
+        android:shadowColor="#4CD475"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:text="MotionY"
+        android:textColor="#FFFFFF" />
+
+
+</RelativeLayout>

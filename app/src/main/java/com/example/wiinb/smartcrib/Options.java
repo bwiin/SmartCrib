@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -26,9 +27,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
+
 public class Options extends AppCompatActivity {
 
-    Button butt1, butt2, butt3, butt4;
+    Button butt1, butt2, butt3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,8 @@ public class Options extends AppCompatActivity {
         setContentView(R.layout.activity_options);
 
         butt1 = (Button)findViewById(R.id.rweight);
+        butt2 = (Button)findViewById(R.id.motionX);
+        butt3 = (Button)findViewById(R.id.motionY);
 
         butt1.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -101,27 +106,88 @@ public class Options extends AppCompatActivity {
 
                 */
 
-                char a = 'b';
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
                         Webb webb = Webb.create();
                         webb.post("http://phuocandlilianfamily.com/PW=group7.CTRL.php")
-                                .param("W", a)
+                                .param("W", "1")
                                 .ensureSuccess()
                                 .asVoid();
                     }
                 };
                 AsyncTask.execute(runnable);
-
-
-
+                butt1.setText("Weight Reset!");
 
             }
         });
+        butt2.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                runAsyncTask(butt2, butt3);
+
+            }
+            });
+        butt3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                runAsyncTask(butt2, butt3);
+
+            }
+        });
+    }
 
 
 
+
+    private void runAsyncTask(Button myButt1, Button myButt2) {
+        new fileOps(myButt1, myButt2).execute("http://phuocandlilianfamily.com/WFile.txt");
+    }
+
+    private class fileOps extends AsyncTask<String, Void, ArrayList<Integer>> {
+
+        Button myButt1, myButt2;
+        ArrayList<Integer> myValueList = new ArrayList<>();
+
+        private fileOps(Button myButt1, Button myButt2){
+            this.myButt1 = myButt1;
+            this.myButt2 = myButt2;
+        }
+
+        protected ArrayList<Integer> doInBackground(String... params) {
+            try {
+                URL url1 = new URL(params[0]);
+                BufferedReader in1 = new BufferedReader(new InputStreamReader(url1.openStream()));
+                String myString;
+                String[] tokens;
+                int i = 0;
+
+                while ((myString = in1.readLine()) != null) {
+
+                    tokens = myString.split("\\s+");
+                    myValueList.add(parseInt(tokens[2]));
+
+                }
+                in1.close();
+
+                return myValueList;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        protected void publishProgress(String...strings)
+        {
+        }
+        protected void onPostExecute(ArrayList<Integer> result) {
+            super.onPostExecute(result);
+            myButt1.setText("MotionX = " +  result.get(1));
+            myButt2.setText(("MotionY = " + result.get(2)));
+            System.out.println("got");
+
+
+        }
     }
 
 }
