@@ -17,7 +17,8 @@
         android:layout_marginStart="25dp"
         android:layout_marginBottom="60dp"
         android:background = "@drawable/pagebtn"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#c91f96"
         android:shadowColor="#4CD475"
         android:shadowDx="0"
         android:shadowDy="0"
@@ -32,7 +33,8 @@
         android:layout_marginBottom="60dp"
         android:layout_centerHorizontal="true"
         android:background = "@drawable/pagebtn"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#3bbc2f"
         android:shadowColor="#4CD475"
         android:shadowDx="0"
         android:shadowDy="0"
@@ -48,7 +50,8 @@
         android:layout_marginBottom="60dp"
         android:layout_marginEnd="25dp"
         android:background = "@drawable/pagebtn"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+        android:textColor="#34aab3"
         android:shadowColor="#4CD475"
         android:shadowDx="0"
         android:shadowDy="0"
@@ -59,5 +62,25 @@
         android:layout_width="match_parent"
         android:layout_height="380dp"
         android:id="@+id/myGraph"/>
+
+    <Switch
+        android:id="@+id/switch2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/hourTempButt"
+        android:layout_marginBottom="142dp"
+        android:text="Filter"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/trash"
+        android:layout_width="57dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="136dp"
+        android:background="@android:drawable/ic_menu_delete"
+        android:text="Button" />
 
 </RelativeLayout>

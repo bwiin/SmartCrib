@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
@@ -45,8 +46,9 @@ public class Weight extends AppCompatActivity {
     DynamoDBMapper dynamoDBMapper;
     String endStamp;
     String startStamp;
-    int periodType;
     GraphView myGraph;
+    int seriesColor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class Weight extends AppCompatActivity {
         Button butt1 = (Button) findViewById(R.id.monthWeightButt);
         Button butt2 = (Button) findViewById(R.id.sixmonthWeightButt);
         Button butt3 = (Button) findViewById(R.id.yearWeightButt);
+        Button delete = (Button) findViewById(R.id.trash);
 
         myGraph = (GraphView) findViewById(R.id.myGraph);
 
@@ -83,28 +86,38 @@ public class Weight extends AppCompatActivity {
         butt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                seriesColor = 1;
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("month");
 
-                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp, seriesColor).execute();
             }
         });
         butt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                seriesColor = 2;
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("6month");
 
-                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp, seriesColor).execute();
             }
         });
         butt3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                seriesColor = 3;
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("year");
 
-                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp, seriesColor).execute();
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myGraph.removeAllSeries();
             }
         });
 
@@ -181,12 +194,15 @@ public class Weight extends AppCompatActivity {
         String startStamp;
         GraphView myGraph;
         LineGraphSeries<DataPoint> mySeries;
+        int seriesColor;
 
-        getData(DynamoDBMapper dynamoDBMapper, GraphView myGraph, String endStamp, String startStamp) {
+        getData(DynamoDBMapper dynamoDBMapper, GraphView myGraph, String endStamp, String startStamp,
+                int seriesColor) {
             this.dynamoDBMapper = dynamoDBMapper;
             this.endStamp = endStamp;
             this.startStamp = startStamp;
             this.myGraph = myGraph;
+            this.seriesColor = seriesColor;
         }
 
         @Override
@@ -214,7 +230,7 @@ public class Weight extends AppCompatActivity {
             // Loop through query results
             try {
                 for (int i = 0; i < resultQuery.size(); i++) {
-                    resultList.add(Float.parseFloat(resultQuery.get(0).getData()));
+                    resultList.add(Float.parseFloat(resultQuery.get(i).getData()));
                 }
             } catch (ArrayIndexOutOfBoundsException exception) {
 
@@ -231,14 +247,24 @@ public class Weight extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<Float> resultList) {
             mySeries = new LineGraphSeries<DataPoint>();
-            for (int i = 0; i < resultList.size(); i++) {
-                //System.out.println(resultList.get(i));
-                mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
-            }
+
+                for (int i = 0; i < resultList.size(); i++) {
+                    mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
+                }
             mySeries.setDrawDataPoints(true);
             mySeries.setAnimated(true);
             myGraph.getViewport().setMaxX(resultList.size());
-            mySeries.setColor(Color.rgb(255,215,0));
+            //adjusts the color of each series according to timestamp.
+            if (seriesColor ==1){
+                mySeries.setColor(Color.parseColor("#c91f96"));
+            }
+            else if (seriesColor == 2){
+                mySeries.setColor(Color.parseColor("#3bbc2f"));
+
+            }else {
+                mySeries.setColor(Color.parseColor("#34aab3"));
+            }
+            //adds the series to the graph
             //adds the series to the graph
             myGraph.addSeries(mySeries);
         }

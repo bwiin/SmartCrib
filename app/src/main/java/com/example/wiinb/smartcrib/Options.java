@@ -38,13 +38,11 @@ public class Options extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
 
-        butt1 = (Button)findViewById(R.id.rweight);
-        butt2 = (Button)findViewById(R.id.motionX);
-        butt3 = (Button)findViewById(R.id.motionY);
+        butt1 = (Button) findViewById(R.id.rweight);
 
-        butt1.setOnClickListener(new View.OnClickListener(){
+        butt1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
 
                 String urlString = "http://phuocandlilianfamily.com/PW=group7.CTRL.php?w=123455";
                 /*
@@ -121,6 +119,9 @@ public class Options extends AppCompatActivity {
 
             }
         });
+    }
+
+        /*
         butt2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -134,12 +135,11 @@ public class Options extends AppCompatActivity {
                 runAsyncTask(butt2, butt3);
 
             }
-        });
-    }
+        });*/
 
 
 
-
+/*
     private void runAsyncTask(Button myButt1, Button myButt2) {
         new fileOps(myButt1, myButt2).execute("http://phuocandlilianfamily.com/WFile.txt");
     }
@@ -188,6 +188,6 @@ public class Options extends AppCompatActivity {
 
 
         }
-    }
+    }*/
 
 }

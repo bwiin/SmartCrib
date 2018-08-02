@@ -13,6 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import android.webkit.WebChromeClient;
@@ -35,14 +36,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import org.w3c.dom.Text;
+
 import static android.content.ContentValues.TAG;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int TIMEOUT = 0;
-    Button butt1, butt2, butt3, butt4;
-    boolean one, two, three;
+    Button butt1, butt2, butt3, butt4, butt5;
+    boolean camera = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,61 +62,79 @@ public class MainActivity extends AppCompatActivity {
         butt2 = (Button)findViewById(R.id.heartrate_butt);
         butt3 = (Button)findViewById(R.id.weight_butt);
         butt4 = (Button)findViewById(R.id.options_butt);
+        butt5 = (Button)findViewById(R.id.camera);
+        TextView txt = (TextView)findViewById(R.id.textView3);
         
         WebView wbb = (WebView) findViewById(R.id.webviewer);
         WebSettings wbset=wbb.getSettings();
         wbset.setJavaScriptEnabled(true);
         wbb.setWebViewClient(new WebViewClient());
-        String url="http://192.168.0.106:8081/";
+        String url="http://192.168.0.112:8081/";
         wbb.loadUrl(url);
-
 
         butt1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if (one == false){
-                    runAsyncTask(butt1, 0);
-                    one = true;
-
-                }else {
-                    Intent int1 = new Intent(MainActivity.this, Temperature.class);
-                    one = false;
-                    butt1.setText("Temperature");
-                    startActivity(int1);
-
+                if (wbb.getVisibility() == View.GONE){
+                    runAsyncTask(txt, 0);
                 }
+                else{
+                    wbb.setVisibility(View.GONE);
+                    txt.setVisibility(View.VISIBLE);
+                    runAsyncTask(txt, 0);
+                }
+            }
+        });
+        butt1.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v) {
+                Intent int1 = new Intent(MainActivity.this, Temperature.class);
+                startActivity(int1);
+                return false;
             }
         });
         butt2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if (two == false)
-                {
-                    runAsyncTask(butt2, 3);
-                    two = true;
-
-                }else {
-                    Intent int2 = new Intent(MainActivity.this, HeartRate.class);
-                    two = false;
-                    butt2.setText("HeartRate");
-                    startActivity(int2);
+                if (wbb.getVisibility() == View.GONE){
+                    runAsyncTask(txt, 3);
                 }
+                else{
+                    wbb.setVisibility(View.GONE);
+                    txt.setVisibility(View.VISIBLE);
+                    runAsyncTask(txt, 3);
+                }
+            }
+        });
+        butt2.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v) {
+                Intent int2 = new Intent(MainActivity.this, HeartRate.class);
+                startActivity(int2);
+                return false;
             }
         });
 
         butt3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if (three == false)
-                {
-                    runAsyncTask(butt3, 1);
-                    three = true;
-                }else {
-                    Intent int3 = new Intent(MainActivity.this, Weight.class);
-                    three = false;
-                    butt3.setText("Weight");
-                    startActivity(int3);
+                if (wbb.getVisibility() == View.GONE){
+                    runAsyncTask(txt, 1);
                 }
+                else{
+                    wbb.setVisibility(View.GONE);
+                    txt.setVisibility(View.VISIBLE);
+                    runAsyncTask(txt, 1);
+                }
+            }
+        });
+
+        butt3.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v) {
+                Intent int3 = new Intent(MainActivity.this, Weight.class);
+                startActivity(int3);
+                return false;
             }
         });
 
@@ -126,22 +146,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //AWSMobileClient.getInstance().initialize(this).execute();
-}
-    private void runAsyncTask(Button myButt, int datatype) {
-        new fileOps(myButt, datatype).execute("http://phuocandlilianfamily.com/MFile.txt", "http://phuocandlilianfamily.com/WFile.txt");
+        butt5.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                    if (txt.getVisibility() == View.VISIBLE){
+                        txt.setVisibility(View.GONE);
+                        wbb.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        wbb.setVisibility(View.VISIBLE);
+                    }
+            }
+
+        });
+    }
+    private void runAsyncTask(TextView txt, int datatype) {
+        new fileOps(txt, datatype).execute("http://phuocandlilianfamily.com/MFile.txt", "http://phuocandlilianfamily.com/WFile.txt");
     }
 
     private class fileOps extends AsyncTask<String, Void, ArrayList<Float>> {
 
-        Button myButt;
+        TextView txt;
         int datatype;
         ArrayList<Float> myValueList = new ArrayList<>();
         String[] units = {"C" , "LB" , "CRY", "BPM"};
 
 
-        private fileOps(Button myButt, int datatype){
-            this.myButt = myButt;
+        private fileOps(TextView txt, int datatype){
+            this.txt = txt;
             this.datatype = datatype;
         }
 
@@ -168,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 while((myString = in2.readLine()) != null){
                     tokens = myString.split("\\s+");
-                    myValueList.add(Float.parseFloat(tokens[2]));
+                    myValueList.add(Float.parseFloat(tokens[2])/100);
                     j++;
                 }
                 in1.close();
@@ -186,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         }
         protected void onPostExecute(ArrayList<Float> result) {
             super.onPostExecute(result);
-            myButt.setText(Float.toString(result.get(datatype)) + units[datatype]);
+            txt.setText(Float.toString(result.get(datatype)) + units[datatype]);
 
 
         }

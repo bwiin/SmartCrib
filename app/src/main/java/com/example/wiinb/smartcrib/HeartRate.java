@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
@@ -33,7 +36,10 @@ import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.google.gson.Gson;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 
 import java.lang.ref.WeakReference;
@@ -45,8 +51,10 @@ public class HeartRate extends AppCompatActivity {
     DynamoDBMapper dynamoDBMapper;
     String endStamp;
     String startStamp;
-    int periodType;
     GraphView myGraph;
+    Switch mySwitch;
+    int seriesColor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +70,14 @@ public class HeartRate extends AppCompatActivity {
         Button butt1 = (Button)findViewById(R.id.hourHRButt);
         Button butt2 = (Button)findViewById(R.id.dayHRButt);
         Button butt3 = (Button)findViewById(R.id.monthHRButt);
+        Button delete = (Button) findViewById(R.id.trash);
+
+        mySwitch = (Switch) findViewById(R.id.switch2);
 
         myGraph = (GraphView) findViewById(R.id.myGraph);
 
         myGraph.getViewport().setYAxisBoundsManual(true);
-        myGraph.getViewport().setMinY(50);
+        myGraph.getViewport().setMinY(0);
         myGraph.getViewport().setMaxY(250);
         myGraph.getViewport().setScalable(true);
 
@@ -82,31 +93,37 @@ public class HeartRate extends AppCompatActivity {
         butt1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                periodType = 3;
+                seriesColor = 1;
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("hour");
 
-                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp, mySwitch, seriesColor).execute();
             }
         });
         butt2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                periodType = 2;
+                seriesColor = 2;
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("day");
 
-                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp, mySwitch, seriesColor).execute();
             }
         });
         butt3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                periodType = 1;
+                seriesColor = 3;
                 endStamp = buildTimestamp(null);
                 startStamp = buildTimestamp("month");
 
-                new getData(dynamoDBMapper, myGraph, endStamp, startStamp).execute();
+                new getData(dynamoDBMapper, myGraph, endStamp, startStamp, mySwitch, seriesColor).execute();
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myGraph.removeAllSeries();
             }
         });
     }
@@ -171,6 +188,8 @@ public class HeartRate extends AppCompatActivity {
         }
         return returnValue;
     }
+
+
     private static class getData extends AsyncTask<BiometricsDO, Void, ArrayList<Float>> {
 
         ArrayList<Float> resultList = new ArrayList<Float>();
@@ -179,12 +198,17 @@ public class HeartRate extends AppCompatActivity {
         String startStamp;
         GraphView myGraph;
         LineGraphSeries<DataPoint> mySeries;
+        Switch mySwitch;
+        int seriesColor;
 
-        getData(DynamoDBMapper dynamoDBMapper, GraphView myGraph, String endStamp, String startStamp){
+        getData(DynamoDBMapper dynamoDBMapper, GraphView myGraph, String endStamp, String startStamp,
+                Switch mySwitch, int seriesColor){
             this.dynamoDBMapper = dynamoDBMapper;
             this.endStamp = endStamp;
             this.startStamp = startStamp;
             this.myGraph = myGraph;
+            this.mySwitch = mySwitch;
+            this.seriesColor = seriesColor;
         }
         @Override
         protected ArrayList<Float> doInBackground(BiometricsDO... biometricsDOS) {
@@ -209,7 +233,7 @@ public class HeartRate extends AppCompatActivity {
             // Loop through query results
             try {
                 for (int i = 0; i < resultQuery.size(); i++) {
-                    resultList.add(Float.parseFloat(resultQuery.get(0).getData()));
+                    resultList.add(Float.parseFloat(resultQuery.get(i).getData()));
                 }
             }catch(ArrayIndexOutOfBoundsException exception){
 
@@ -225,18 +249,41 @@ public class HeartRate extends AppCompatActivity {
         //use onPostExecute to send data from queries to be used in another method.
         @Override
         protected void onPostExecute(ArrayList<Float> resultList) {
-            mySeries = new LineGraphSeries<DataPoint>();
-            for (int i = 0; i < resultList.size(); i++) {
-                //System.out.println(resultList.get(i));
-                mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
+            int flag = 0;
+            mySeries = new LineGraphSeries<>();
+
+            if(mySwitch.isChecked())
+                flag = 1;
+
+            if (flag == 1){
+                for (int i = 0; i < resultList.size(); i++) {
+                    if (resultList.get(i) < 70 | resultList.get(i) > 160)
+                        mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
+                }
+            }else
+            {
+                for (int i = 0; i < resultList.size(); i++) {
+                    mySeries.appendData(new DataPoint(i, resultList.get(i)), true, resultList.size());
+                }
             }
             mySeries.setDrawDataPoints(true);
             mySeries.setAnimated(true);
             myGraph.getViewport().setMaxX(resultList.size());
-            mySeries.setColor(Color.rgb(255,215,0));
+            //adjusts the color of each series according to timestamp.
+            if (seriesColor ==1){
+                mySeries.setColor(Color.parseColor("#c91f96"));
+            }
+            else if (seriesColor == 2){
+                mySeries.setColor(Color.parseColor("#3bbc2f"));
 
+            }else {
+                mySeries.setColor(Color.parseColor("#34aab3"));
+            }
             //adds the series to the graph
             myGraph.addSeries(mySeries);
+
+
         }
     }
+
 }

@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/baby"
+        android:icon="@drawable/baby"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -22,9 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Temperature"
-            android:label="@string/Temperature"/>
+            android:label="Temperature"/>
         <activity android:name=".HeartRate"
-            android:label="@string/HeartRate"/>
+            android:label="HeartRate"/>
         <activity android:name=".Weight"
             android:label="@string/Weight"/>
         <activity android:name=".Options"
